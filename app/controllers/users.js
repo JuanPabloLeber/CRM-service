@@ -33,7 +33,7 @@ exports.createUser = async (req, res) => {
     if (alreadyExist === null) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds)
       const newUser = await UserModel.create(req.body)
-      res.status(200).json(newUser)
+      res.status(200).json({ msg: 'User created' })
     } else {
       res.status(409).json({ msg: 'User already registered' })
     }
@@ -55,7 +55,7 @@ exports.updateUser = async (req, res) => {
       }
     }
     const updatedUser = await UserModel.findByIdAndUpdate(req.params.userId, req.body, { new: true })
-    res.status(200).json(updatedUser)
+    res.status(200).json({ msg: 'User updated' })
   } catch (error) {
     console.log(error)
     res.status(500).json({ msg: 'Error in server' })
@@ -108,7 +108,7 @@ exports.createCustomer = async (req, res) => {
       req.body.creator = creator
       req.body.lastModified = creator
       const newUser = await CustomerModel.create(req.body)
-      res.status(200).json(newUser)
+      res.status(200).json({ msg: 'Customer created' })
     } else {
       res.status(409).json({ msg: 'Customer already registered' })
     }
@@ -130,7 +130,7 @@ exports.updateCustomer = async (req, res) => {
       const lastModified = req.userData.id
       req.body.lastModified = lastModified
       const updatedCustomer = await CustomerModel.findByIdAndUpdate(req.params.customerId, req.body, { new: true })
-      res.status(200).json(updatedCustomer)
+      res.status(200).json({ msg: 'Customer updated' })
     }
   } catch (error) {
     console.log(error)
