@@ -13,7 +13,7 @@ $ npm run devStart
 
 # build for production
 $ npm run start
-
+```
 
 ## API Endpoints
 All the endpoints are preceeded by `/app`.
@@ -43,9 +43,9 @@ All the endpoints are preceeded by `/app`.
 
 |Verb|Route|Description|Auth.|Body Params|Returns|Notes|
 |-|-|-|-|-|-|-|
-|GET|**/user/customers** |Get a list with all customers|Admin, User|-|List with all customers|-
+|GET|**/user/customers** |Get a list with all customers|Admin, User|-|List with all Customers|-
 |GET|**/user/customers/:customerId** |Get a Customer by customerId|Admin, User|-|Customer|-
-|POST|**/user/customers**|Register a new Customer in the App|Admin, User|**name**, **email**, **surname**, **photo**, **creator, **lastModified**|Customer created|-|
+|POST|**/user/customers**|Register a new Customer in the App|Admin, User|**name**, **email**, **surname**, **photo**, **creator**, **lastModified**|Customer created|-|
 |PUT|**/user/customers/:customerId**|Update a Customer by id|Admin, User|name, email, surname, photo, creator, lastModified|Customer updated|-
 |DELETE|**/user/customers/:customerId** |Delete a Customer by userId|Admin, User|-|Customer deleted|-
 
