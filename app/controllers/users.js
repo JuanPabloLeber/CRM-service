@@ -1,6 +1,5 @@
 const { UserModel } = require('../models/user')
 const { CustomerModel } = require('../models/customer')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const saltRounds = parseInt(process.env.SALTROUNDS)
 
