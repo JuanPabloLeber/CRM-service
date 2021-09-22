@@ -23,12 +23,18 @@ exports.verifyToken = async (req, res, next) => {
 }
 
 exports.checkAdmin = async (req, res, next) => {
-  const user = req.userData
-  const dataBaseUser = await UserModel.findById({ id: user.id })
-  if (dataBaseUser) {
-    if (dataBaseUser.role === 'admin') {
-      next()
+  try {
+    const user = req.userData
+    const dataBaseUser = await UserModel.findById({ _id: user.id })
+    if (dataBaseUser) {
+      if (dataBaseUser.role === 'admin') {
+        next()
+      }
+    } else {
+      res.status(403).json({ msg: 'Access not allowed' })
     }
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ msg: 'Error in Server' })
   }
-  res.status(403).json({ msg: 'Access not allowed' })
 }

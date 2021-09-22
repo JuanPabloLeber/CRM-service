@@ -4,10 +4,7 @@ const saltRounds = parseInt(process.env.SALTROUNDS)
 
 exports.listUsers = async (req, res) => {
   try {
-    const options = {
-      populate: ['creator', 'lastModified']
-    }
-    const users = await UserModel.paginate({}, options)
+    const users = await UserModel.paginate()
     res.status(200).json(users)
   } catch (error) {
     console.log(error)
@@ -31,6 +28,9 @@ exports.listUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
+    if (req.body.role !== 'admin' && req.body.role !== 'user') {
+      return res.status(400).json({ msg: 'Invalid role' })
+    }
     const alreadyExist = await UserModel.findOne({ email: req.body.email })
     if (alreadyExist === null) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds)
@@ -47,6 +47,9 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
+    if (req.body.role !== 'admin' && req.body.role !== 'user') {
+      return res.status(400).json({ msg: 'Invalid role' })
+    }
     if (req.body.password) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds)
     }

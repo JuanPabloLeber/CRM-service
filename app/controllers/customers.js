@@ -15,7 +15,7 @@ exports.listCustomers = async (req, res) => {
 
 exports.listCustomer = async (req, res) => {
   try {
-    const user = await CustomerModel.findById(req.params.userId).populate('creator').populate('lastModified')
+    const user = await CustomerModel.findById(req.params.customerId).populate('creator').populate('lastModified')
     if (user) {
       res.status(200).json(user)
     } else {
