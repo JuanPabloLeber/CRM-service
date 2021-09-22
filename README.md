@@ -22,7 +22,7 @@ All the endpoints are preceeded by `/app`.
 
 |Verb|Route|Description|Auth.|Body Params|Returns|Notes|
 |-|-|-|-|-|-|-|
-|POST|**/auth/login** |Log in with email and password|-|**email**, **password**|token, name, email, id, role|-
+|POST|**/auth/login** |Log in with email and password|-|**email**, **password**|token, email, id|-
 ##
 <br>
 
