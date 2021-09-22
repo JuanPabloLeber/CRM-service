@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const { UserModel } = require('../app/models/user')
 const secret = process.env.SECRET
 
 exports.verifyToken = async (req, res, next) => {
@@ -21,11 +22,13 @@ exports.verifyToken = async (req, res, next) => {
   }
 }
 
-exports.checkAdmin = (req, res, next) => {
+exports.checkAdmin = async (req, res, next) => {
   const user = req.userData
-  if (user.role === 'admin') {
-    next()
-  } else {
-    res.status(403).json({ msg: 'Access not allowed' })
+  const dataBaseUser = await UserModel.findById({ id: user.id })
+  if (dataBaseUser) {
+    if (dataBaseUser.role === 'admin') {
+      next()
+    }
   }
+  res.status(403).json({ msg: 'Access not allowed' })
 }

@@ -1,32 +1,21 @@
 const express = require('express')
 const usersRouter = express.Router()
-const { verifyToken, checkAdmin } = require('../../utils/auth')
 
 const {
   listUsers,
   listUser,
   createUser,
   updateUser,
-  deleteUser,
-  listCustomers,
-  listCustomer,
-  createCustomer,
-  updateCustomer,
-  deleteCustomer
+  deleteUser
 } = require('../controllers/users.js')
 
-usersRouter.get('/', verifyToken, checkAdmin, listUsers)
-usersRouter.get('/customers', verifyToken, listCustomers)
-usersRouter.get('/:userId', verifyToken, checkAdmin, listUser)
-usersRouter.get('/customers/:customerId', verifyToken, listCustomer)
+usersRouter.get('/', listUsers)
+usersRouter.get('/:userId', listUser)
 
-usersRouter.post('/', verifyToken, checkAdmin, createUser)
-usersRouter.post('/customers/', verifyToken, createCustomer)
+usersRouter.post('/', createUser)
 
-usersRouter.put('/customers/:customerId', verifyToken, updateCustomer)
-usersRouter.put('/:userId', verifyToken, checkAdmin, updateUser)
+usersRouter.put('/:userId', updateUser)
 
-usersRouter.delete('/customers/:customerId', verifyToken, deleteCustomer)
-usersRouter.delete('/:userId', verifyToken, checkAdmin, deleteUser)
+usersRouter.delete('/:userId', deleteUser)
 
 exports.usersRouter = usersRouter
