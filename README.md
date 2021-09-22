@@ -22,7 +22,7 @@ All the endpoints are preceeded by `/app`.
 
 |Verb|Route|Description|Auth.|Body Params|Returns|Notes|
 |-|-|-|-|-|-|-|
-|POST|**/auth/login** |Log in with email and password|-|**email**, **password**|token, name, email, id, role|-
+|POST|**/auth/login** |Log in with email and password|-|**email**, **password**|token, email, id|-
 ##
 <br>
 
@@ -43,11 +43,11 @@ All the endpoints are preceeded by `/app`.
 
 |Verb|Route|Description|Auth.|Body Params|Returns|Notes|
 |-|-|-|-|-|-|-|
-|GET|**/user/customers** |Get a list with all customers|Admin, User|-|List with all Customers|-
-|GET|**/user/customers/:customerId** |Get a Customer by customerId|Admin, User|-|Customer|-
-|POST|**/user/customers**|Register a new Customer in the App|Admin, User|**name**, **email**, **surname**, **photo**, **creator**, **lastModified**|Customer created|-|
-|PUT|**/user/customers/:customerId**|Update a Customer by id|Admin, User|name, email, surname, photo, creator, lastModified|Customer updated|-
-|DELETE|**/user/customers/:customerId** |Delete a Customer by userId|Admin, User|-|Customer deleted|-
+|GET|**/customer** |Get a list with all customers|Admin, User|-|List with all Customers|-
+|GET|**/customer/:customerId** |Get a Customer by customerId|Admin, User|-|Customer|-
+|POST|**/customer**|Register a new Customer in the App|Admin, User|**name**, **email**, **surname**, **photo**, **creator**, **lastModified**|Customer created|-|
+|PUT|**/customer/:customerId**|Update a Customer by id|Admin, User|name, email, surname, photo, creator, lastModified|Customer updated|-
+|DELETE|**/customer/:customerId** |Delete a Customer by userId|Admin, User|-|Customer deleted|-
 
 ##
 
