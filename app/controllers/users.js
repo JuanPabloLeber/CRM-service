@@ -4,7 +4,11 @@ const saltRounds = parseInt(process.env.SALTROUNDS)
 
 exports.listUsers = async (req, res) => {
   try {
-    const users = await UserModel.paginate()
+    const options = {
+      limit: parseInt(req.query.limit, 10) || 10,
+      page: parseInt(req.query.page, 10) || 1
+    }
+    const users = await UserModel.paginate({}, options)
     res.status(200).json(users)
   } catch (error) {
     console.log(error)

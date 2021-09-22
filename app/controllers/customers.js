@@ -3,7 +3,9 @@ const { CustomerModel } = require('../models/customer')
 exports.listCustomers = async (req, res) => {
   try {
     const options = {
-      populate: ['creator', 'lastModified']
+      populate: ['creator', 'lastModified'],
+      limit: parseInt(req.query.limit, 10) || 10,
+      page: parseInt(req.query.page, 10) || 1
     }
     const users = await CustomerModel.paginate({}, options)
     res.status(200).json(users)
