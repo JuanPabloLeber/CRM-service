@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET
-const { UserModel } = require('../api/models/user.model')
 
 exports.verifyToken = async (req, res, next) => {
   try {
@@ -9,7 +8,7 @@ exports.verifyToken = async (req, res, next) => {
     if (typeof bearerHeader !== 'undefined') {
       const token = bearerHeader.split(' ')[1]
       jwt.verify(token, secret, (error, userData) => {
-        if (error) return res.status(403).json({ msg: 'Token not valid'})
+        if (error) return res.status(403).json({ msg: 'Token not valid' })
         req.userData = userData
         next()
       })
@@ -19,5 +18,14 @@ exports.verifyToken = async (req, res, next) => {
   } catch (error) {
     console.log(error)
     res.status(500).json({ msg: 'Error in Server' })
+  }
+}
+
+exports.checkAdmin = (req, res, next) => {
+  const user = req.userData
+  if (user.role === 'admin') {
+    next()
+  } else {
+    res.status(403).json({ msg: 'Access not allowed' })
   }
 }
