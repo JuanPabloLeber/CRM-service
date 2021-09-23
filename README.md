@@ -13,6 +13,9 @@ $ npm run devStart
 
 # build for production
 $ npm run start
+
+# NOTE: Remember to add your enviroment variables => 
+        DATABASE_URL, SECRET, SALTROUNDS, PORT.  
 ```
 
 ## API Endpoints
