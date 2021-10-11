@@ -1,4 +1,4 @@
-const { CustomerModel } = require('../models/customer')
+const customersRepository = require('../mongoDBRepository/customers')
 
 exports.listCustomers = async (req, res) => {
   try {
@@ -7,8 +7,8 @@ exports.listCustomers = async (req, res) => {
       limit: parseInt(req.query.limit, 10) || 10,
       page: parseInt(req.query.page, 10) || 1
     }
-    const users = await CustomerModel.paginate({}, options)
-    res.status(200).json(users)
+    const customers = await customersRepository.retrieveCustomers({}, options)
+    res.status(200).json(customers)
   } catch (error) {
     console.log(error)
     res.status(500).json({ msg: 'Error in server' })
@@ -17,9 +17,9 @@ exports.listCustomers = async (req, res) => {
 
 exports.listCustomer = async (req, res) => {
   try {
-    const user = await CustomerModel.findById(req.params.customerId).populate('creator').populate('lastModified')
-    if (user) {
-      res.status(200).json(user)
+    const customer = await customersRepository.retrieveCustomer(req)
+    if (customer) {
+      res.status(200).json(customer)
     } else {
       res.status(404).json({ msg: 'Customer not found' })
     }
@@ -32,11 +32,11 @@ exports.listCustomer = async (req, res) => {
 exports.createCustomer = async (req, res) => {
   try {
     const creator = req.userData.id
-    const alreadyExist = await CustomerModel.findOne({ email: req.body.email })
+    const alreadyExist = await customersRepository.findCustomerByEmail(req)
     if (alreadyExist === null) {
       req.body.creator = creator
       req.body.lastModified = creator
-      const newUser = await CustomerModel.create(req.body)
+      const newCustomer = await customersRepository.createCustomer(req)
       res.status(200).json({ msg: 'Customer created' })
     } else {
       res.status(409).json({ msg: 'Customer already registered' })
@@ -50,7 +50,7 @@ exports.createCustomer = async (req, res) => {
 exports.updateCustomer = async (req, res) => {
   try {
     if (req.body.email) {
-      const alreadyExist = await CustomerModel.findOne({ email: req.body.email })
+      const alreadyExist = await customersRepository.findCustomerByEmail(req)
       if (alreadyExist !== null) {
         return res.status(409).json({ msg: 'Email already in use' })
       }
@@ -58,7 +58,7 @@ exports.updateCustomer = async (req, res) => {
       delete req.body.creator
       const lastModified = req.userData.id
       req.body.lastModified = lastModified
-      const updatedCustomer = await CustomerModel.findByIdAndUpdate(req.params.customerId, req.body, { new: true })
+      const updatedCustomer = await customersRepository.findByIdAndUpdateCustomer(req, { new: true })
       res.status(200).json({ msg: 'Customer updated' })
     }
   } catch (error) {
@@ -69,7 +69,7 @@ exports.updateCustomer = async (req, res) => {
 
 exports.deleteCustomer = async (req, res) => {
   try {
-    const deletedCustomer = await CustomerModel.findByIdAndDelete(req.params.customerId)
+    const deletedCustomer = await customersRepository.findByIdAndDeleteCustomer(req)
     if (deletedCustomer !== null) {
       res.status(200).json({ msg: 'Customer deleted' })
     } else {

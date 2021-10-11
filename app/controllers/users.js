@@ -1,4 +1,4 @@
-const { UserModel } = require('../models/user')
+const usersRepository = require('../mongoDBRepository/users')
 const bcrypt = require('bcrypt')
 const saltRounds = parseInt(process.env.SALTROUNDS)
 
@@ -8,7 +8,7 @@ exports.listUsers = async (req, res) => {
       limit: parseInt(req.query.limit, 10) || 10,
       page: parseInt(req.query.page, 10) || 1
     }
-    const users = await UserModel.paginate({}, options)
+    const users = await usersRepository.retrieveUsers({}, options)
     res.status(200).json(users)
   } catch (error) {
     console.log(error)
@@ -18,7 +18,7 @@ exports.listUsers = async (req, res) => {
 
 exports.listUser = async (req, res) => {
   try {
-    const user = await UserModel.findById(req.params.userId)
+    const user = await usersRepository.retrieveUser(req)
     if (user) {
       res.status(200).json(user)
     } else {
@@ -32,13 +32,10 @@ exports.listUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   try {
-    if (req.body.role !== 'admin' && req.body.role !== 'user') {
-      return res.status(400).json({ msg: 'Invalid role' })
-    }
-    const alreadyExist = await UserModel.findOne({ email: req.body.email })
+    const alreadyExist = await usersRepository.findUserByEmail(req)
     if (alreadyExist === null) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds)
-      const newUser = await UserModel.create(req.body)
+      const newUser = await usersRepository.createUser(req)
       res.status(200).json({ msg: 'User created' })
     } else {
       res.status(409).json({ msg: 'User already registered' })
@@ -51,19 +48,16 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    if (req.body.role !== 'admin' && req.body.role !== 'user') {
-      return res.status(400).json({ msg: 'Invalid role' })
-    }
     if (req.body.password) {
       req.body.password = await bcrypt.hash(req.body.password, saltRounds)
     }
     if (req.body.email) {
-      const alreadyExist = await UserModel.findOne({ email: req.body.email })
+      const alreadyExist = await usersRepository.findUserByEmail(req)
       if (alreadyExist !== null) {
         return res.status(409).json({ msg: 'Email already in use' })
       }
     }
-    const updatedUser = await UserModel.findByIdAndUpdate(req.params.userId, req.body, { new: true })
+    const updatedUser = await usersRepository.findByIdAndUpdateUser(req, { new: true })
     res.status(200).json({ msg: 'User updated' })
   } catch (error) {
     console.log(error)
@@ -73,7 +67,7 @@ exports.updateUser = async (req, res) => {
 
 exports.deleteUser = async (req, res) => {
   try {
-    const deletedUser = await UserModel.findByIdAndDelete(req.params.userId)
+    const deletedUser = await usersRepository.findByIdAndDeleteUser(req)
     if (deletedUser !== null) {
       res.status(200).json({ msg: 'User deleted' })
     } else {
