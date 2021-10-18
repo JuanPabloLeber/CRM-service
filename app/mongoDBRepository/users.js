@@ -59,3 +59,14 @@ exports.findByIdAndDeleteUser = async (req) => {
     throw Error('Error while deleting user')
   }
 }
+
+exports.findUserById = async (req) => {
+  try {
+    const user = req.userData
+    const dataBaseUser = await UserModel.findById({ _id: user.id })
+    return dataBaseUser
+  } catch (error) {
+    console.log(error)
+    throw Error('Error while deleting user')
+  }
+}

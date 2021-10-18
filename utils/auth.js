@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { UserModel } = require('../app/models/user')
+const usersRepository = require('../app/mongoDBRepository/users')
 const secret = process.env.SECRET
 
 exports.verifyToken = async (req, res, next) => {
@@ -24,8 +24,7 @@ exports.verifyToken = async (req, res, next) => {
 
 exports.checkAdmin = async (req, res, next) => {
   try {
-    const user = req.userData
-    const dataBaseUser = await UserModel.findById({ _id: user.id })
+    const dataBaseUser = await usersRepository.findUserById
     if (dataBaseUser) {
       if (dataBaseUser.role === 'admin') {
         next()
